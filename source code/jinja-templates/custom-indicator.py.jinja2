@@ -1,0 +1,47 @@
+import sys
+import os
+
+parent_directory = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(parent_directory)
+
+import druid_api
+import pandas as pd
+import pandas_ta as ta
+import numpy as np
+import time
+
+ticker = sys.argv[1]
+curs = druid_api.get_cursor()
+
+while 'StockPrices' not in druid_api.get_data_sources():
+    time.sleep(5)
+
+ohlcv = druid_api.get_query_result(f"""
+    SELECT *
+    FROM StockPrices
+    WHERE ticker='{ticker}'
+""", curs)
+
+open = ohlcv['open']
+high = ohlcv['high']
+low = ohlcv['low']
+close = ohlcv['close']
+volume = ohlcv['volume']
+n = len(open)
+
+{{ user_code }}
+
+out = {{ output_variable }}
+
+if type(out) == list:
+    out = pd.Series(out)
+
+out.to_csv(os.path.join(parent_directory, "tmp/{{ indicator }}.csv"), index=False)
+
+
+
+
+
+
+
+
